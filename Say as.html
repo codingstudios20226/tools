@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Thinker Webhook</title>
+</head>
+<body>
+  <h1>Thinker Webhook</h1>
+
+  <input id="msg" type="text" placeholder="What should Thinker say?" />
+  <button id="send">Send to Discord</button>
+
+  <p id="status"></p>
+
+  <script>
+    const webhookUrl = "Webhook here";
+
+    document.getElementById("send").onclick = async () => {
+      const text = document.getElementById("msg").value;
+      const status = document.getElementById("status");
+
+      if (!text) {
+        status.textContent = "Type something first.";
+        return;
+      }
+
+      const payload = {
+        content: ` ${text}`
+      };
+
+      try {
+        const res = await fetch(webhookUrl, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+
+        if (res.ok) {
+          status.textContent = "Sent!";
+        } else {
+          status.textContent = "Error: " + res.status;
+        }
+      } catch (e) {
+        status.textContent = "Failed: " + e;
+      }
+    };
+  </script>
+</body>
+</html>
+
