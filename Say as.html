@@ -7,17 +7,32 @@
 <body>
   <h1>Thinker Webhook</h1>
 
+  <!-- Webhook input -->
+  <input id="webhook" type="text" placeholder="Enter Discord Webhook URL" style="width:300px;" />
+
+  <!-- Message input -->
   <input id="msg" type="text" placeholder="What should Thinker say?" />
+
   <button id="send">Send to Discord</button>
 
   <p id="status"></p>
 
   <script>
-    const webhookUrl = "Webhook here";
-
     document.getElementById("send").onclick = async () => {
+      const webhookUrl = document.getElementById("webhook").value;
       const text = document.getElementById("msg").value;
       const status = document.getElementById("status");
+
+      if (!webhookUrl) {
+        status.textContent = "Enter a webhook URL.";
+        return;
+      }
+
+      // Prevent 404 by checking if webhook has ID + TOKEN
+      if (webhookUrl.split("/").length < 7) {
+        status.textContent = "Invalid webhook URL.";
+        return;
+      }
 
       if (!text) {
         status.textContent = "Type something first.";
@@ -25,7 +40,7 @@
       }
 
       const payload = {
-        content: ` ${text}`
+        content: text
       };
 
       try {
@@ -35,11 +50,7 @@
           body: JSON.stringify(payload)
         });
 
-        if (res.ok) {
-          status.textContent = "Sent!";
-        } else {
-          status.textContent = "Error: " + res.status;
-        }
+        status.textContent = res.ok ? "Sent!" : "Error: " + res.status;
       } catch (e) {
         status.textContent = "Failed: " + e;
       }
@@ -47,4 +58,3 @@
   </script>
 </body>
 </html>
-
