@@ -1,3 +1,4 @@
+//make sure to run this in pengiunmod 
 class BetterVerify {
     constructor() {
         this.generatedCode = "";
